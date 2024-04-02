@@ -39,7 +39,7 @@ export class Order {
     @OneToMany(() => OrderItem, orderItem => orderItem.order)
     orderItems: OrderItem[];
 
-    @Column()
+    @Column({default: "CART"})
     status: "CART" | "SHIPPING_ADDRESS_SET" | "PAID";
 
     @Column()

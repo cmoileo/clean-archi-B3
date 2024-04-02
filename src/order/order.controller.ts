@@ -43,7 +43,7 @@ export class OrderController {
   }
 
   @Patch(':id/shippingAddress')
-  setShippingMethod(@Param('id') id: string, @Body() shippingAddress: any) {
-    return this.orderService.updateShippingAddress(+id, shippingAddress);
+  setShippingStatus(@Param('id') id: string, @Body() shippingAddress: any) {
+    return this.orderService.setShippingStatus(+id, shippingAddress);
   }
 }

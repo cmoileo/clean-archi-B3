@@ -56,7 +56,13 @@ export class OrderService {
     return this.orderRepository.save(updatedOrder);
   }
 
-  async updateShippingAddress(id: string, shippingAddress: any) {
+  async setShippingMethod(orderId: string, shippingAddress: any) {
+    const order = await this.orderRepository.findOneBy({id: orderId});
+    const updatedOrder = await new SetOrderShippingMethodService(this.orderRepository).setShippingMethod(order.id, shippingAddress);
+    return this.orderRepository.save(updatedOrder);
+  }
+
+  async setShippingStatus(id: string, shippingAddress: any) {
     const order = await this.orderRepository.findOneBy({id});
     const updatedOrder = await new SetOrderShippingMethodService(this.orderRepository).setShippingMethod(order.id, shippingAddress);
     return this.orderRepository.save(updatedOrder);

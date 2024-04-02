@@ -15,6 +15,7 @@ export class SetOrderShippingMethodService {
 
         try {
             order.shippingAddress = shippingAddress;
+            order.status = 'SHIPPING_ADDRESS_SET';
             return this.orderRepository.save(order);
         } catch (error) {
             throw new Error('Error while setting shipping method');
