@@ -1,25 +1,25 @@
-import {IsArray, IsNotEmpty, IsString, IsInt } from "class-validator";
-import {CreateDateColumn} from "typeorm";
+import { IsArray, IsInt, IsNotEmpty, IsString } from 'class-validator';
 
-export class OrderCreateDTO {
-    @IsNotEmpty()
-    @IsString()
-    customer_name: string;
-    @IsNotEmpty()
-    @IsArray()
-    orderItems: OrderItemCreateDto[];
-    @CreateDateColumn()
-    orderDate: Date;
+class CreateOrderItemDto {
+  @IsNotEmpty()
+  @IsString()
+  productName: string;
+
+  @IsNotEmpty()
+  @IsInt()
+  quantity: number;
+
+  @IsNotEmpty()
+  @IsInt()
+  price: number;
 }
 
-export class OrderItemCreateDto {
-    @IsNotEmpty()
-    @IsString()
-    product_name: string;
-    @IsNotEmpty()
-    @IsInt()
-    quantity: number;
-    @IsNotEmpty()
-    @IsInt()
-    price: number;
+export class CreateOrderDto {
+  @IsNotEmpty()
+  @IsString()
+  customerName: string;
+
+  @IsNotEmpty()
+  @IsArray()
+  orderItems: CreateOrderItemDto[];
 }

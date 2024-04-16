@@ -1,24 +1,23 @@
-import OrderRepository from "../../infrastructure/order.repository";
+import { Order } from '../entity/order.entity';
+import { SetOrderShippingAddressDto } from '../dto/set-order-shipping-Address.dto';
+import { OrderRepositoryInterface } from '../port/order.repository.interface';
 
-export class SetOrderShippingMethodService {
-    constructor(private readonly orderRepository: OrderRepository) {}
-    async setShippingMethod(orderId, shippingAddress) {
-        const order = await this.orderRepository.findOne(orderId);
+export class SetOrderShippingAddressService {
+  constructor(private orderRepository: OrderRepositoryInterface) {}
 
-        if (!order) {
-            throw new Error('Order not found');
-        }
+  async setOrderShippingAddress(
+    setOrderShippingAddressDto: SetOrderShippingAddressDto,
+  ): Promise<Order> {
+    const order = await this.orderRepository.findById(
+      setOrderShippingAddressDto.orderId,
+    );
 
-        if (shippingAddress && (shippingAddress.length < 5 || shippingAddress.length > 20)) {
-            throw new Error('Address must be between 5 and 20 characters')
-        }
-
-        try {
-            order.shippingAddress = shippingAddress;
-            order.status = 'SHIPPING_ADDRESS_SET';
-            return this.orderRepository.save(order);
-        } catch (error) {
-            throw new Error('Error while setting shipping method');
-        }
+    if (!order) {
+      throw new Error('Order not found');
     }
+
+    order.setShippingAddress(setOrderShippingAddressDto.shippingAddress);
+
+    return this.orderRepository.save(order);
+  }
 }
