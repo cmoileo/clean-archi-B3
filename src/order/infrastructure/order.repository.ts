@@ -2,6 +2,7 @@ import { InjectDataSource } from '@nestjs/typeorm';
 import { DataSource, Repository } from 'typeorm';
 import { Order } from '../domain/entity/order.entity';
 import { OrderRepositoryInterface } from '../domain/port/order.repository.interface';
+import { OrderItem } from '../domain/entity/order-item.entity';
 
 export default class OrderRepository
   extends Repository<Order>
@@ -23,6 +24,14 @@ export default class OrderRepository
     const queryBuilder = this.createQueryBuilder('order');
 
     return queryBuilder.getMany();
+  }
+  async addOrderItem(orderItem: OrderItem): Promise<Order> {
+    const queryBuilder = this.createQueryBuilder('order');
+    queryBuilder.where('order.id = :id', { id: orderItem.id });
+
+    const order = await queryBuilder.getOne();
+
+    return queryBuilder.getOne();
   }
 
   async findByCustomerName(customerName: string): Promise<Order[]> {

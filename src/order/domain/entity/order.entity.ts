@@ -38,6 +38,9 @@ export class Order {
   shippingAddress: string | null;
 
   @Column({ nullable: true })
+  invoicingAddress: string | null;
+
+  @Column({ nullable: true })
   shippingAddressSetAt: Date | null;
 
   @Column()
@@ -68,6 +71,20 @@ export class Order {
     this.shippingAddressSetAt = new Date();
     this.status = OrderStatus.SHIPPING_ADDRESS_SET;
   }
+  addOrderItem(orderItem: OrderItem): void {
+    if (this.status !== OrderStatus.CART) {
+      throw new Error('You cannot add items to a paid order');
+    }
+    if (orderItem.productName === '') {
+      throw new Error('Product name is required');
+    }
+    if (orderItem.quantity <= 0 || orderItem.quantity > 2) {
+      throw new Error(
+        'Quantity must be greater than 0 and less than or equal to 2',
+      );
+    }
+    this.orderItems.push(orderItem);
+  }
 
   pay() {
     if (this.status !== OrderStatus.SHIPPING_ADDRESS_SET) {
@@ -76,5 +93,20 @@ export class Order {
 
     this.status = OrderStatus.PAID;
     this.paidAt = new Date();
+  }
+
+  setInvoiceAddress(invoiceAddress: string): void {
+    if (invoiceAddress === '') {
+      throw new Error('Invoice address is required');
+    }
+
+    if (invoiceAddress.length > 100) {
+      throw new Error(
+        'Invoice address must be less than or equal to 100 characters',
+      );
+    }
+
+    this.invoicingAddress = invoiceAddress;
+    this.status = OrderStatus.INVOICING_ADDRESS_SET;
   }
 }
