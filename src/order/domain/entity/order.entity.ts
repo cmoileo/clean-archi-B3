@@ -7,6 +7,10 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { Exclude, Expose } from 'class-transformer';
+
+export const GROUP_ORDER = 'group_order_details';
+export const GROUP_ALL_ORDERS = 'group_all_orders';
 
 @Entity()
 export class Order {
@@ -18,35 +22,45 @@ export class Order {
   }
 
   @CreateDateColumn()
+  @Exclude()
   createdAt: Date;
 
   @PrimaryGeneratedColumn()
+  @Expose({ groups: [GROUP_ORDER, GROUP_ALL_ORDERS] })
   id: string;
 
   @Column()
+  @Expose({ groups: [GROUP_ORDER, GROUP_ALL_ORDERS] })
   price: number;
 
   @Column()
+  @Expose({ groups: [GROUP_ORDER, GROUP_ALL_ORDERS] })
   customerName: string;
 
   @OneToMany(() => OrderItem, (orderItem) => orderItem.order, {
     nullable: true,
   })
+  @Expose({ groups: [GROUP_ORDER, GROUP_ALL_ORDERS] })
   orderItems: OrderItem[];
 
   @Column({ nullable: true })
+  @Exclude()
   shippingAddress: string | null;
 
   @Column({ nullable: true })
+  @Exclude()
   invoicingAddress: string | null;
 
   @Column({ nullable: true })
+  @Exclude()
   shippingAddressSetAt: Date | null;
 
   @Column()
+  @Exclude()
   status: OrderStatus;
 
   @Column()
+  @Exclude()
   paidAt: Date | null;
 
   getOrderTotalPrice(): number {
